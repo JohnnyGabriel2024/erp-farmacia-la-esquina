@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Panel Ejecutivo</h2>
+</div>
+
+<div class="card">
+    <h3>Resumen General</h3>
+    <table>
+        <tr>
+            <th>Total Ventas Confirmadas</th>
+            <td class="num">$ {{ fmt(total_ventas) }}</td>
+        </tr>
+        <tr>
+            <th>Total Compras Confirmadas</th>
+            <td class="num">$ {{ fmt(total_compras) }}</td>
+        </tr>
+        <tr>
+            <th>Valor Total Inventario</th>
+            <td class="num">$ {{ fmt(inventario) }}</td>
+        </tr>
+        <tr>
+            <th>Total Productos</th>
+            <td class="num">{{ total_productos }}</td>
+        </tr>
+        <tr>
+            <th>Documentos en Borrador</th>
+            <td class="num">{{ borradores }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Indicadores Comerciales</h3>
+    <table>
+        <tr>
+            <th>Producto Más Vendido</th>
+            <td>
+                {% if mas_vendido %}
+                    {{ mas_vendido["nombre"] }} ({{ mas_vendido["total"] }})
+                {% else %}
+                    Sin datos
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Producto Más Comprado</th>
+            <td>
+                {% if mas_comprado %}
+                    {{ mas_comprado["nombre"] }} ({{ mas_comprado["total"] }})
+                {% else %}
+                    Sin datos
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Última Venta Confirmada</th>
+            <td>
+                {% if ultima_venta %}
+                    ID {{ ultima_venta["id"] }} - {{ ultima_venta["fecha"] }}
+                {% else %}
+                    Sin datos
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Última Compra Confirmada</th>
+            <td>
+                {% if ultima_compra %}
+                    ID {{ ultima_compra["id"] }} - {{ ultima_compra["fecha"] }}
+                {% else %}
+                    Sin datos
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}

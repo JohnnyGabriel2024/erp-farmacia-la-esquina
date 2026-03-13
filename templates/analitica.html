@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Analítica Ejecutiva</h1>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+.chart-container{
+width:100%;
+max-width:720px;
+height:320px;
+margin:20px auto;
+position:relative;
+}
+
+</style>
+
+<div class="card">
+
+<h2>Compras vs Ventas</h2>
+
+<div class="chart-container">
+<canvas id="graficoFinanzas"></canvas>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Top 5 Productos Más Vendidos</h2>
+
+<div class="chart-container">
+<canvas id="graficoProductos"></canvas>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Compras por Proveedor</h2>
+
+<div class="chart-container">
+<canvas id="graficoProveedores"></canvas>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Inventario por Categoría</h2>
+
+<div class="chart-container">
+<canvas id="graficoCategorias"></canvas>
+</div>
+
+</div>
+
+<script>
+
+const compras = {{ compras }};
+const ventas = {{ ventas }};
+
+const proveedores = {{ proveedores | tojson }};
+const topProductos = {{ top_productos | tojson }};
+const categorias = {{ categorias | tojson }};
+
+new Chart(
+document.getElementById('graficoFinanzas'),
+{
+type:'bar',
+data:{
+labels:['Compras','Ventas'],
+datasets:[{
+label:'Monto',
+data:[compras,ventas],
+backgroundColor:[
+'#e74c3c',
+'#27ae60'
+]
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{
+legend:{display:false}
+}
+}
+}
+)
+
+new Chart(
+document.getElementById('graficoProductos'),
+{
+type:'bar',
+data:{
+labels: topProductos.map(p => p.nombre),
+datasets:[{
+label:'Unidades Vendidas',
+data: topProductos.map(p => p.total),
+backgroundColor:'#3498db'
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+indexAxis:'y'
+}
+}
+)
+
+new Chart(
+document.getElementById('graficoProveedores'),
+{
+type:'pie',
+data:{
+labels: proveedores.map(p => p.nombre),
+datasets:[{
+data: proveedores.map(p => p.total),
+backgroundColor:[
+'#3498db',
+'#9b59b6',
+'#f1c40f',
+'#e67e22',
+'#1abc9c',
+'#e74c3c'
+]
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+}
+)
+
+new Chart(
+document.getElementById('graficoCategorias'),
+{
+type:'doughnut',
+data:{
+labels: categorias.map(c => c.nombre),
+datasets:[{
+data: categorias.map(c => c.total),
+backgroundColor:[
+'#2980b9',
+'#8e44ad',
+'#27ae60',
+'#f39c12',
+'#c0392b',
+'#16a085'
+]
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+}
+)
+
+</script>
+
+{% endblock %}

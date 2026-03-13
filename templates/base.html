@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>ERP Farmacia La Esquina</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar" id="sidebar">
+
+<div class="logo">
+ERP
+</div>
+
+<nav>
+
+<a href="/dashboard">Panel de Control</a>
+<a href="/categorias">Categorías</a>
+<a href="/productos">Productos</a>
+<a href="/proveedores">Proveedores</a>
+<a href="/compras">Compras</a>
+<a href="/ventas">Ventas</a>
+<a href="/inventario">Inventario</a>
+<a href="/movimientos">Movimientos</a>
+<a href="/analitica">Analítica</a>
+
+</nav>
+
+</aside>
+
+<!-- CONTENIDO -->
+
+<div class="main">
+
+<header class="topbar">
+
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<div class="title">
+ERP Farmacia La Esquina
+</div>
+
+</header>
+
+<div class="content">
+
+{% block content %}
+{% endblock %}
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function toggleMenu(){
+document.getElementById("sidebar").classList.toggle("active")
+}
+
+</script>
+
+</body>
+</html>

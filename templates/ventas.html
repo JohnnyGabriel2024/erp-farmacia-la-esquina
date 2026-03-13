@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Ventas</h2>
+
+    <form method="POST">
+        <input type="hidden" name="crear_documento" value="1">
+        <button type="submit">Crear Documento (Borrador)</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Documentos de Venta</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="num">ID</th>
+                <th>Fecha</th>
+                <th class="num">Total</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in ventas %}
+            <tr>
+                <td class="num">{{ v["id"] }}</td>
+                <td>{{ v["fecha"] }}</td>
+                <td class="num">$ {{ fmt(v["total"]) }}</td>
+                <td>
+                    {% if v["estado"] == "borrador" %}
+                        <span class="estado-borrador">borrador</span>
+                    {% else %}
+                        <span class="estado-confirmada">confirmada</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if v["estado"] == "borrador" %}
+                        <form method="POST" action="/confirmar_venta" style="display:inline;">
+                            <input type="hidden" name="venta_id" value="{{ v['id'] }}">
+                            <button type="submit">Confirmar</button>
+                        </form>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% if v["estado"] == "borrador" %}
+            <tr>
+                <td colspan="5">
+                    <div class="card">
+
+                        <h4>Agregar Producto</h4>
+
+                        <form method="POST">
+                            <input type="hidden" name="agregar_detalle" value="1">
+                            <input type="hidden" name="venta_id" value="{{ v['id'] }}">
+
+                            <label>Producto</label>
+                            <select name="producto_id" id="producto_{{ v['id'] }}" required>
+                                <option value="">Seleccionar</option>
+                                {% for p in productos %}
+                                    <option value="{{ p['id'] }}"
+                                            data-precio="{{ p['precio_venta'] }}">
+                                        {{ p["nombre"] }} (Stock: {{ p["stock"] }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Cantidad</label>
+                            <input type="number" name="cantidad" required>
+
+                            <label>Precio Venta</label>
+                            <input type="number" name="precio_venta"
+                                   id="precio_{{ v['id'] }}" required>
+
+                            <button type="submit">Agregar</button>
+                        </form>
+
+                        <h4>Detalle</h4>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th class="num">Cantidad</th>
+                                    <th class="num">Precio</th>
+                                    <th class="num">Subtotal</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in detalles %}
+                                    {% if d["venta_id"] == v["id"] %}
+                                    <tr>
+                                        <td>{{ d["producto"] }}</td>
+                                        <td class="num">{{ d["cantidad"] }}</td>
+                                        <td class="num">$ {{ fmt(d["precio_venta"]) }}</td>
+                                        <td class="num">$ {{ fmt(d["cantidad"] * d["precio_venta"]) }}</td>
+                                        <td>{{ d["fecha"] }}</td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </td>
+            </tr>
+
+<script>
+document.getElementById("producto_{{ v['id'] }}")
+.addEventListener("change", function() {
+
+const precio = this.options[this.selectedIndex]
+.getAttribute("data-precio");
+
+document.getElementById("precio_{{ v['id'] }}").value = precio;
+
+});
+</script>
+
+            {% endif %}
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

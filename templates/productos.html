@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Gestión de Productos</h2>
+
+    <form method="POST">
+        <label>Nombre del Producto</label>
+        <input type="text" name="nombre" required>
+
+        <label>Precio de Venta</label>
+        <input type="number" name="precio_venta" required>
+
+        <label>Categoría</label>
+        <select name="categoria_id" required>
+            <option value="">Seleccionar</option>
+            {% for c in categorias %}
+                <option value="{{ c['id'] }}">{{ c["nombre"] }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Agregar Producto</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Listado de Productos</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="num">ID</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th class="num">Precio Venta</th>
+                <th class="num">Stock</th>
+                <th class="num">Inventario Valorizado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in productos %}
+            <tr>
+                <td class="num">{{ p["id"] }}</td>
+                <td>{{ p["nombre"] }}</td>
+                <td>{{ p["categoria"] if p["categoria"] else "Sin categoría" }}</td>
+                <td class="num">$ {{ fmt(p["precio_venta"]) }}</td>
+                <td class="num">{{ p["stock"] }}</td>
+                <td class="num">$ {{ fmt(p["precio_venta"] * p["stock"]) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

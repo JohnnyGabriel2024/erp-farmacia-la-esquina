@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Inventario</h2>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th class="num">ID</th>
+                <th>Categoría</th>
+                <th>Producto</th>
+                <th class="num">Precio Venta</th>
+                <th class="num">Stock</th>
+                <th class="num">Inventario Valorizado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in inventario %}
+            <tr>
+                <td class="num">{{ p["id"] }}</td>
+                <td>{{ p["categoria"] if p["categoria"] else "Sin categoría" }}</td>
+                <td>{{ p["nombre"] }}</td>
+                <td class="num">$ {{ fmt(p["precio_venta"]) }}</td>
+                <td class="num">{{ p["stock"] }}</td>
+                <td class="num">$ {{ fmt(p["precio_venta"] * p["stock"]) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

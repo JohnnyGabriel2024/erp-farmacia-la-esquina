@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Movimientos de Inventario</h2>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Producto</th>
+                <th class="num">Cantidad</th>
+                <th>Fecha Operativa</th>
+                <th class="num">Documento</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimientos %}
+            <tr>
+                <td>
+                    {% if m["tipo"] == "entrada" %}
+                        Entrada
+                    {% else %}
+                        Salida
+                    {% endif %}
+                </td>
+                <td>{{ m["nombre"] }}</td>
+                <td class="num">{{ m["cantidad"] }}</td>
+                <td>{{ m["fecha"] }}</td>
+                <td class="num">{{ m["documento"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

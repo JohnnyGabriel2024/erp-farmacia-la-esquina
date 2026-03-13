@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Compras</h2>
+
+    <form method="POST">
+        <input type="hidden" name="crear_documento" value="1">
+
+        <label>Proveedor</label>
+        <select name="proveedor_id" required>
+            <option value="">Seleccionar</option>
+            {% for p in proveedores %}
+                <option value="{{ p['id'] }}">{{ p["nombre"] }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Crear Documento (Borrador)</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Documentos de Compra</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="num">ID</th>
+                <th>Proveedor</th>
+                <th>Fecha</th>
+                <th class="num">Total</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in compras %}
+            <tr>
+                <td class="num">{{ c["id"] }}</td>
+                <td>{{ c["proveedor"] }}</td>
+                <td>{{ c["fecha"] }}</td>
+                <td class="num">$ {{ fmt(c["total"]) }}</td>
+                <td>
+                    {% if c["estado"] == "borrador" %}
+                        <span class="estado-borrador">borrador</span>
+                    {% else %}
+                        <span class="estado-confirmada">confirmada</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if c["estado"] == "borrador" %}
+                        <form method="POST" action="/confirmar_compra" style="display:inline;">
+                            <input type="hidden" name="compra_id" value="{{ c['id'] }}">
+                            <button type="submit">Confirmar</button>
+                        </form>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% if c["estado"] == "borrador" %}
+            <tr>
+                <td colspan="6">
+
+                    <div class="card">
+
+                        <h4>Agregar Producto</h4>
+
+                        <form method="POST">
+                            <input type="hidden" name="agregar_detalle" value="1">
+                            <input type="hidden" name="compra_id" value="{{ c['id'] }}">
+
+                            <label>Producto</label>
+                            <select name="producto_id" required>
+                                {% for p in productos %}
+                                    <option value="{{ p['id'] }}">{{ p["nombre"] }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Cantidad</label>
+                            <input type="number" name="cantidad" required>
+
+                            <label>Precio Compra</label>
+                            <input type="number" name="precio_compra" required>
+
+                            <button type="submit">Agregar</button>
+                        </form>
+
+                        <h4>Detalle</h4>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th class="num">Cantidad</th>
+                                    <th class="num">Precio</th>
+                                    <th class="num">Subtotal</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in detalles %}
+                                    {% if d["compra_id"] == c["id"] %}
+                                    <tr>
+                                        <td>{{ d["producto"] }}</td>
+                                        <td class="num">{{ d["cantidad"] }}</td>
+                                        <td class="num">$ {{ fmt(d["precio_compra"]) }}</td>
+                                        <td class="num">$ {{ fmt(d["cantidad"] * d["precio_compra"]) }}</td>
+                                        <td>{{ d["fecha"] }}</td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </td>
+            </tr>
+            {% endif %}
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
